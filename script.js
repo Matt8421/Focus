@@ -8,6 +8,9 @@ const botones = document.querySelectorAll('.app__card-button')
 const inputEnfoqueMusica = document.querySelector('#alternar-musica')
 const musica = new Audio('./sonidos/luna-rise-part-one.mp3')
 const botonIniciarPausar = document.querySelector('#start-pause')
+const audioPlay = new Audio('./sonidos/play.wav') /*  Creamos una instancia del objeto Audio */
+const audioPause = new Audio('./sonidos/pause.mp3') /* Pausa y play los llamo en la fc iniciarPausar */
+const audioTiempoFinalizado = new Audio('./sonidos/beep.mp3') /* Tiempo Finalizado , lo llamo en la fc cuentaRegresiva */
 
 let tiempoTranscurridoEnSegundos = 5
 let idIntervalo = null
@@ -70,14 +73,34 @@ function cambiarContexto (contexto){
 
 }
 
+/* Funcion para el boton de comenzar */
+
 const cuentaRegresiva = () => {
-    iniciarPausar()
+    if (tiempoTranscurridoEnSegundos <= 0){
+        audioTiempoFinalizado.play()
+        alert('Tiempo finalizado')
+        reiniciar()
+        return
+    }
     tiempoTranscurridoEnSegundos -= 1
-    console.log("Temporizador:" + tiempoTranscurridoEnSegundos) /* Temporizador es string , contatenamos con una variable que es tiempotranscur.. */
+    console.log('Tiempo' + tiempoTranscurridoEnSegundos)/* Muestra el tiempo actual */
+    console.log('Id' + idIntervalo) /* Muestra el ID actual */
 }
 
-botonIniciarPausar.addEventListener('click',cuentaRegresiva )
+botonIniciarPausar.addEventListener('click',iniciarPausar )
 
 function iniciarPausar() {
-    idIntervalo = setInterval(cuentaRegresiva, 1000)
+    if(idIntervalo){
+        audioPause.play()
+        reiniciar()
+        return /* Retorno anticipado --circuit breaker */
+    }
+
+    audioPlay.play();
+    idIntervalo = setInterval(cuentaRegresiva, 1000) /* SetInterval es un método */
+}
+
+function reiniciar () {
+    clearInterval(idIntervalo)
+    idIntervalo = null
 }
