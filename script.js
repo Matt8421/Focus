@@ -6,13 +6,17 @@ const banner = document.querySelector('.app__image')
 const titulo = document.querySelector('.app__title')
 const botones = document.querySelectorAll('.app__card-button')
 const inputEnfoqueMusica = document.querySelector('#alternar-musica')
-const musica = new Audio('./sonidos/luna-rise-part-one.mp3')
 const botonIniciarPausar = document.querySelector('#start-pause')
+const textoIniciarPausar = document.querySelector('#start-pause span')
+const iconoIniciarPausar = document.querySelector('.app__card-primary-butto-icon')
+const tiempoEnPantalla = document.querySelector('#timer')
+
+const musica = new Audio('./sonidos/luna-rise-part-one.mp3')
 const audioPlay = new Audio('./sonidos/play.wav') /*  Creamos una instancia del objeto Audio */
 const audioPause = new Audio('./sonidos/pause.mp3') /* Pausa y play los llamo en la fc iniciarPausar */
 const audioTiempoFinalizado = new Audio('./sonidos/beep.mp3') /* Tiempo Finalizado , lo llamo en la fc cuentaRegresiva */
 
-let tiempoTranscurridoEnSegundos = 5
+let tiempoTranscurridoEnSegundos = 1500
 let idIntervalo = null
 
 musica.loop = true
@@ -82,9 +86,13 @@ const cuentaRegresiva = () => {
         reiniciar()
         return
     }
+
+    textoIniciarPausar.textContent = "Pausar"
+    iconoIniciarPausar.setAttribute('src', `/imagenes/pause.png`)
     tiempoTranscurridoEnSegundos -= 1
     console.log('Tiempo' + tiempoTranscurridoEnSegundos)/* Muestra el tiempo actual */
     console.log('Id' + idIntervalo) /* Muestra el ID actual */
+    mostrarTiempo()
 }
 
 botonIniciarPausar.addEventListener('click',iniciarPausar )
@@ -102,5 +110,14 @@ function iniciarPausar() {
 
 function reiniciar () {
     clearInterval(idIntervalo)
+    textoIniciarPausar.textContent = "Comenzar"
+    iconoIniciarPausar.setAttribute('src', `/imagenes/play_arrow.png`)
     idIntervalo = null
 }
+
+function mostrarTiempo(){
+    const tiempo = new Date(tiempoTranscurridoEnSegundos * 1000) 
+    const tiempoFormateado = tiempo.toLocaleTimeString('es-AR', {minute: '2-digit' , second: '2-digit'})
+    tiempoEnPantalla.innerHTML = `${tiempoFormateado}`
+}
+mostrarTiempo()
