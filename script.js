@@ -30,21 +30,25 @@ inputEnfoqueMusica.addEventListener('change', () => {
 })
 
 botonCorto.addEventListener('click', () => {
+    tiempoTranscurridoEnSegundos = 300
     cambiarContexto ('descanso-corto')
     botonCorto.classList.add('active')
 })
 
 botonEnfoque.addEventListener('click', () => {
+    tiempoTranscurridoEnSegundos = 1500
     cambiarContexto ('enfoque')
     botonEnfoque.classList.add('active')
 })
 
 botonLargo.addEventListener('click', () =>{
+    tiempoTranscurridoEnSegundos = 900
     cambiarContexto ('descanso-largo')
     botonLargo.classList.add('active')
 });
 
 function cambiarContexto (contexto){
+    mostrarTiempo()
     botones.forEach(function(contexto){
         contexto.classList.remove('active')
     })
@@ -115,6 +119,8 @@ function reiniciar () {
     idIntervalo = null
 }
 
+
+/* Funcion para mostrar el tiempo en pantalla */
 function mostrarTiempo(){
     const tiempo = new Date(tiempoTranscurridoEnSegundos * 1000) 
     const tiempoFormateado = tiempo.toLocaleTimeString('es-AR', {minute: '2-digit' , second: '2-digit'})
